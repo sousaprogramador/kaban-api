@@ -4,9 +4,7 @@ import tasksSeed from './tasksSeed.json';
 
 export const connectToDatabase = async (): Promise<void> => {
   try {
-    const mongoURI =
-      process.env.MONGO_URI ??
-      'mongodb+srv://mamutinho:wJTorhKGnjb6D742@cluster0.3tpes.mongodb.net/kanban?retryWrites=true&w=majority';
+    const mongoURI = process.env.MONGO_URI;
     await mongoose.connect(mongoURI);
     console.log('Database connection established');
     // If the tasks collection is empty it will be seeded with mock data during the first connection.
