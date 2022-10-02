@@ -1,27 +1,21 @@
 import { PaginateResult } from 'mongoose';
-import { taskModel } from '../../../database';
-import { ITasksRepository } from './ITaskRepository';
+import { AbstractRepository } from '../../../shared/abstraction/Repository';
+import { ITask, ITasksRepository } from '../interfaces';
 
-class TasksRepository implements ITasksRepository {
-  public async read(page: number, limit: number): Promise<any> {
-    const task = await taskModel.paginate({}, { page, limit, sort: { boardId: 1, status: 1, priority: -1 } });
-    return 'task';
+export class TasksRepository extends AbstractRepository<ITask> implements ITasksRepository {
+  public async read(page: number, limit: number): Promise<PaginateResult<ITask>> {
+    return await this.model.paginate({}, { page, limit, sort: { boardId: 1, status: 1, priority: -1 } });
   }
 
-  public async readFromBoard(boardId: string): Promise<any | undefined> {
-    const task = await taskModel.find({ boardId }).sort({ status: 1, priority: -1 });
-    return task;
+  public async readFromBoard(boardId: string): Promise<ITask[]> {
+    return await this.model.find({ boardId }).sort({ status: 1, priority: -1 });
   }
 
-  public async updateMembers(id: string, operation: '$addToSet' | '$pull', value: string): Promise<any | undefined> {
-    const task = await taskModel.findByIdAndUpdate(id, { [operation]: { members: value } }, { new: true });
-    return task;
+  public async updateMembers(id: string, operation: '$addToSet' | '$pull', value: string): Promise<ITask | null> {
+    return await this.model.findByIdAndUpdate(id, { [operation]: { members: value } }, { new: true });
   }
 
-  public async updateTags(id: string, operation: '$addToSet' | '$pull', value: string): Promise<any | undefined> {
-    const task = await taskModel.findByIdAndUpdate(id, { [operation]: { tags: value } }, { new: true });
-    return task;
+  public async updateTags(id: string, operation: '$addToSet' | '$pull', value: string): Promise<ITask | null> {
+    return await this.model.findByIdAndUpdate(id, { [operation]: { tags: value } }, { new: true });
   }
 }
-
-export { TasksRepository };

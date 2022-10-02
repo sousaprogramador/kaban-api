@@ -1,5 +1,5 @@
 import { app } from './app';
-import { connectToDatabase } from './database';
+import { connectToDatabase } from './shared/database';
 
 const PORT = process.env.PORT ?? 3333;
 
